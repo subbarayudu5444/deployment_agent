@@ -1,28 +1,74 @@
-# Deployment Agent
+# Coastal Seven Deployment Agent
 
-This project is a Deployment Agent that automates the deployment of GitHub repositories to Render.
+Automated deployment agent that deploys GitHub repositories locally with both frontend and backend support.
 
-## Workflow
-1. User provides a GitHub public repository link.
-2. The agent creates a new web service on Render:
-   - Language: Python 3
-   - Build Command: `cd backend && pip install -r requirements.txt`
-   - Start Command: `cd backend && uvicorn main:app --host 0.0.0.0 --port 13000`
-   - Plan: Free
-3. The agent retrieves the public Render link and returns it to the user.
+## Project Structure
 
-## Environment Variables
-- `RENDER_API_KEY`: API key for Render authentication.
+```
+AGENT-SDLC/
+├── backend/
+│   ├── routers/
+│   │   ├── __init__.py
+│   │   ├── deployment.py    # Deployment endpoints
+│   │   └── lightning.py     # Lightning.ai integration
+│   ├── deployments/         # Deployed repositories
+│   ├── config.py           # Configuration and environment
+│   ├── main.py             # FastAPI app entry point
+│   ├── requirements.txt    # Python dependencies
+│   └── .env               # Environment variables
+└── README.md
+```
 
-## How to Run
-1. Set the `RENDER_API_KEY` environment variable.
-2. Start the backend server:
+## Quick Start
+
+1. **Install dependencies:**
+   ```bash
+   cd backend
+   pip install -r requirements.txt
+   ```
+
+2. **Set environment variables:**
+   ```bash
+   # Create .env file with:
+   LIGHTNING_API_KEY=your_lightning_api_key
+   ```
+
+3. **Run the server:**
    ```bash
    python main.py
    ```
-3. Send a POST request to `/deploy` with the GitHub repository URL.
 
-## Example
+4. **Access the API:**
+   - API Documentation: http://127.0.0.1:8000/docs
+   - Deploy endpoint: `POST /api/deploy`
+   - Status endpoint: `GET /api/status/{repo_name}`
+
+## API Endpoints
+
+### Deployment
+- `POST /api/deploy` - Deploy a GitHub repository
+- `GET /api/status/{repo_name}` - Check deployment status
+
+### Lightning.ai
+- `GET /api/test-graphql` - Test Lightning.ai GraphQL connection
+
+## Usage Example
+
 ```bash
-curl -X POST http://127.0.0.1:8000/deploy -H "Content-Type: application/json" -d '{"repo_url": "https://github.com/username/repository.git"}'
+# Deploy a repository
+curl -X POST "http://127.0.0.1:8000/api/deploy" \
+  -H "Content-Type: application/json" \
+  -d '{"repo_url": "https://github.com/username/repository.git"}'
+
+# Check status
+curl "http://127.0.0.1:8000/api/status/repository"
 ```
+
+## Features
+
+- ✅ Automatic GitHub repository cloning
+- ✅ Frontend and backend deployment
+- ✅ Automatic port management
+- ✅ API URL synchronization
+- ✅ Health checks and status monitoring
+- ✅ Lightning.ai integration ready

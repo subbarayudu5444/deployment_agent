@@ -1,0 +1,13 @@
+name: deployment-agent
+
+compute:
+  type: cpu-small
+
+build:
+  - pip install -r requirements.txt
+
+run:
+  - cd backend && python main.py
+
+env:
+  PORT: 8000
